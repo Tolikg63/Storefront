@@ -1,14 +1,12 @@
 from django.db import models
 
 
+class Promotion(models.Model):
+    description = models.CharField(max_length=255)
+    discount = models.FileField()
+
+
 class Collection(models.Model):
-    title = models.CharField(max_length=255)
-
-
-class Item(models.Model):
-    title = models.CharField(max_length=255)
-
-class Cart(models.Model):
     title = models.CharField(max_length=255)
 
 
@@ -19,6 +17,7 @@ class Product(models.Model):
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    promotions = models.ManyToManyField(Promotion)
 
 
 class Customer(models.Model):
@@ -37,8 +36,7 @@ class Customer(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
-    membership = models.CharField(
-        max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
+    membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
 
 class Order(models.Model):
@@ -56,12 +54,27 @@ class Order(models.Model):
     payment_status = models.CharField(
         max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
-    item = models.ForeignKey(Item, on_delete=models.PROTECT)
-    cart = models.ForeignKey(Cart, on_delete=models.PROTECT)
+    # item = models.ForeignKey(Item, on_delete=models.PROTECT)
+    # cart = models.ForeignKey(Cart, on_delete=models.PROTECT)
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    quantity = models.PositiveSmallIntegerField()
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
 
 
 class Address(models.Model):
     city = models.CharField(max_length=255)
     street = models.CharField(max_length=255)
-    customer = models.OneToOneField(
-        Customer, on_delete=models.CASCADE, primary_key=True)
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
+
+
+class Cart(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Cartitem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveSmallIntegerField()
