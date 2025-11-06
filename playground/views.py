@@ -1,5 +1,7 @@
 from django.shortcuts import render
+from store.models import Customer
 
 
 def index(request):
-   return render(request, 'index.html', context={'name': 'Tolik'})
+   customers = Customer.objects.all()[:30]
+   return render(request, 'index.html', {'customers': list(customers)})

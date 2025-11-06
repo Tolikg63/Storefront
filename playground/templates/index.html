@@ -6,10 +6,10 @@
    <title>Main page</title>
 </head>
 <body>
-   {% if name %}
-      <h1>Hello {{ name }}</h1>
-   {% else %}
-      <h1>Hello World!</h1>
-   {% endif %}
+   <ol>
+      {% for item in customers %}
+         <li>{{ item.first_name }} {{ item.last_name }}</li>
+      {% endfor %}
+   </ol>
 </body>
 </html>
