@@ -37,7 +37,8 @@ class Customer(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
-    membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
+    membership = models.CharField(
+        max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
 
 class Order(models.Model):
@@ -58,6 +59,7 @@ class Order(models.Model):
     # item = models.ForeignKey(Item, on_delete=models.PROTECT)
     # cart = models.ForeignKey(Cart, on_delete=models.PROTECT)
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
@@ -68,7 +70,8 @@ class OrderItem(models.Model):
 class Address(models.Model):
     city = models.CharField(max_length=255)
     street = models.CharField(max_length=255)
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
+    customer = models.OneToOneField(
+        Customer, on_delete=models.CASCADE, primary_key=True)
 
 
 class Cart(models.Model):
